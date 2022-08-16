@@ -22,15 +22,14 @@ namespace ShopOnline.Api.Controllers
             try
             {
                 var products = await _productRepo.GetItems();
-                var productCategories = await _productRepo.GetCategories();
 
-                if (products == null || productCategories == null)
+                if (products == null)
                 {
                     return NotFound();
                 }
                 else
                 {
-                    var productDtos = products.ConvertToDto(productCategories);
+                    var productDtos = products.ConvertToDto();
 
                     return Ok(productDtos);
                 }
@@ -55,9 +54,7 @@ namespace ShopOnline.Api.Controllers
                 }
                 else
                 {
-                    var productCategory = await _productRepo.GetCategory(product.CategoryId);
-
-                    var productDto = product.ConvertToDto(productCategory);
+                    var productDto = product.ConvertToDto();
                     return Ok(productDto);
                 }
             }
@@ -82,7 +79,7 @@ namespace ShopOnline.Api.Controllers
             {
 
                 return StatusCode(StatusCodes.Status500InternalServerError,
-                                "Error retrieving data from the database");
+                                "Error retrieving data from the database"); 
             }
         }
 
@@ -93,11 +90,9 @@ namespace ShopOnline.Api.Controllers
             try
             {
                 var products = await _productRepo.GetItemsByCategory(categoryId);
-                var productCategories = await _productRepo.GetCategories();
-                var productDtos = products.ConvertToDto(productCategories); 
+                var productDtos = products.ConvertToDto(); 
 
                 return Ok(productDtos);
-
             }
             catch (Exception)
             {
